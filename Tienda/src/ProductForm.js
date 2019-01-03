@@ -1,7 +1,63 @@
 import React from 'react';
 
 
+const RESET_VALUES = {id: '', category: '', price: '', stocked: false, name: ''};
+
+
 class ProductForm extends React.Component {
+
+  constructor(props) {
+
+    super(props);
+
+    this.handleChange = this.handleChange.bind(this);
+
+    this.handleSave = this.handleSave.bind(this);
+
+    this.state = {
+
+      product: Object.assign({}, RESET_VALUES),
+
+      errors: {}
+
+    };
+
+  }
+
+  handleChange(e) {
+
+    const target = e.target;
+
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+
+    const name = target.name;
+
+
+    this.setState((prevState) => {
+
+      prevState.product[name] = value;
+
+      return { product: prevState.product };
+
+    });
+
+  }
+
+  handleSave(e) {
+
+    this.props.onSave(this.state.product);
+
+    this.setState({
+
+      product: Object.assign({}, RESET_VALUES),
+
+      errors: {}
+
+    });
+
+    e.preventDefault();
+
+  }
 
   render() {
 
@@ -19,7 +75,7 @@ class ProductForm extends React.Component {
 
             <br />
 
-            <input type="text" name="name" />
+            <input type="text" name="name" onChange={this.handleChange} value={this.state.product.name}/>
 
           </label>
 
@@ -33,7 +89,7 @@ class ProductForm extends React.Component {
 
             <br />
 
-            <input type="text" name="category" />
+            <input type="text" name="category" onChange={this.handleChange} value={this.state.product.category} />
 
           </label>
 
@@ -47,7 +103,7 @@ class ProductForm extends React.Component {
 
             <br />
 
-            <input type="text" name="price" />
+            <input type="text" name="price" onChange={this.handleChange} value={this.state.product.price} />
 
           </label>
 
@@ -57,7 +113,7 @@ class ProductForm extends React.Component {
 
           <label>
 
-            <input type="checkbox" name="stocked" />
+            <input type="checkbox" name="stocked" onChange={this.handleChange} checked={this.state.product.stocked}/>
 
              In stock?
 
@@ -65,7 +121,7 @@ class ProductForm extends React.Component {
 
         </p>
 
-        <input type="submit" value="Save" />
+        <input type="submit" value="Save" onClick={this.handleSave}/>
 
       </form>
 
